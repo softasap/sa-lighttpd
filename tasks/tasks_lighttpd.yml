@@ -1,0 +1,85 @@
+---
+  - name: Lighttpd | dependencies
+    package:
+      name: libselinux-python
+      state: present
+    when: ansible_distribution in [ "CentOS", "RedHat" ]      
+    become: yes
+    tags:
+      - lighttpd
+
+  - name: Lighttpd | Install package
+    package:
+      name: lighttpd
+      state: present
+    become: yes
+    tags:
+      - lighttpd
+
+  - name: Lighttpd | Ensure config dirs
+    file: path="{{ item }}" state="directory"
+    with_items:
+      - /etc/lighttpd/conf-available
+      - /etc/lighttpd/conf-enabled
+      - /etc/lighttpd/sites-available
+      - /etc/lighttpd/sites-enabled
+      - /usr/local/share/lighttpd/
+    become: yes
+    tags:
+      - lighttpd
+
+
+  # - name: Lighttpd | Ensure writeable dirs
+  #   file: path="{{ item }}" state="directory"
+  #   with_items:
+  #     - /var/log/lighttpd
+  #     - /var/cache/lighttpd/compress
+  #     - /var/cache/lighttpd/uploads
+  #   become: yes
+  #   tags:
+  #     - lighttpd
+
+
+  - block:
+      - name: Lighttpd | template conf snippets
+        template: src="templates/conf-available/{{ item }}" dest="/etc/lighttpd/conf-available"
+        with_items:
+          - 05-auth.conf
+          - 10-cml.conf
+          - 10-magnet.conf
+          - 10-rrdtool.conf
+          - 10-ssi.conf
+          - 10-status.conf
+          - 10-userdir.conf
+          - 10-cgi.conf
+          - 10-fastcgi.conf  
+          - 10-proxy.conf
+          - 10-simple-vhost.conf
+          - 10-ssl.conf
+          - 10-trigger-b4-dl.conf
+          - 10-webdav.conf
+        become: yes
+        tags:
+          - lighttpd
+
+    when: ansible_distribution in [ "CentOS", "RedHat" ]
+
+  - name: Lighttpd | Patch default settings /etc/lighttpd/lighttpd.conf
+    lineinfile: dest=/etc/lighttpd/lighttpd.conf  regexp="{{item.regexp}}" line="{{item.line}}" insertafter="{{item.insertafter | default('EOF')}}"
+    with_items: "{{default_conf_properties | default([])}}"
+    become: yes
+    tags:
+      - lighttpd
+
+  - name: Lighttpd | Patch custom settings /etc/lighttpd/lighttpd.conf
+    lineinfile: dest=/etc/lighttpd/lighttpd.conf  regexp="{{item.regexp}}" line="{{item.line}}" insertafter="{{item.insertafter | default('EOF')}}"
+    with_items: "{{custom_conf_properties | default([])}}"
+    become: yes
+    tags:
+      - lighttpd
+
+  - name: Lighttpd | Restart service
+    service: name="lighttpd" state="restarted" enabled="yes"
+    become: yes
+    tags:
+      - lighttpd

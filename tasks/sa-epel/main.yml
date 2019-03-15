@@ -1,0 +1,3 @@
+---
+# tasks file for sa-epel
+  - include_tasks: tasks_epel.yml
