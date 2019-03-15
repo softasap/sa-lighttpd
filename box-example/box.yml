@@ -1,0 +1,82 @@
+---
+- hosts: www
+  gather_facts: False
+
+  vars:
+    - root_dir: "{{ playbook_dir }}"
+    - shared_dir: "{{ playbook_dir }}/../shared"
+
+
+  pre_tasks:
+    - debug: msg="Pre tasks section"
+
+    - name: ANSIBLE PYTHON | install python 2
+      raw: test -e /usr/bin/python || (apt -qqy update && apt install -qy python-minimal)
+      become: yes
+
+    - name:  UNPRIVILEGED USERS | Get acl dependency (ansible unprivileged user operations magic)
+      apt: pkg="acl"
+      become: yes
+
+    - name: gather facts
+      setup:
+
+#    - name: Include common pretasks
+#      include_tasks: "{{shared_dir}}/common_pretasks.yml"
+#      tags: always
+
+
+  roles:
+     - {
+         role: "sa-lighttpd"
+       }
+     - {
+         role: "sa-php-fpm",
+         php_family: default, # 5.6 | 7.0 | hhvm |  default
+         php_fpm_group: "www-data",
+         option_install_xdebug: false,
+         tags: [update]
+       }
+     - {
+        role: "sa-acme-sh",
+        le_groups: ["www-data"]
+       }
+
+
+  tasks:
+
+    - debug: msg="Tasks section"
+
+    - name: Configure lighttpd for php (1/2)
+      command: lighty-enable-mod fastcgi
+      ignore_errors: true
+      register: result
+      changed_when: "result.rc == 2"
+      become: yes      
+
+    - name: Configure lighttpd for php (2/2)
+      template: src="templates/lighttpd-php-fpm.conf.j2" dest="/etc/lighttpd/conf-enabled/lighttpd-php-fpm.conf"
+      become: yes
+
+    - name: Create acme web challenges dir
+      file: path="/var/www/html/.well-known" state="directory" owner="le" group="www-data" mode="u=rwx,g=rwx,o=rx"
+      become: yes
+
+    - name: Restart lighttpd
+      service: name="lighttpd" state="restarted"
+      become: yes
+
+    - name: Generate certificates
+      command: acme.sh --issue -d somedomain.voronenko.net -w /var/www/html  
+      args:
+        creates: /opt/letsencrypt/certs/somedomain.voronenko.net/fullchain.cer
+      become: yes
+      become_user: le
+    
+    - name: Configure lighttpd for ssl
+      template: src="templates/lighttpd-letsencrypt.conf.j2" dest="/etc/lighttpd/conf-enabled/lighttpd-ssl.conf"
+      become: yes
+
+    - name: Restart lighttpd
+      service: name="lighttpd" state="restarted"
+      become: yes

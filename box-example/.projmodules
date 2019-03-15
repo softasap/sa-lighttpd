@@ -1,0 +1,14 @@
+[submodule "roles/sa-lighttpd"]
+        path = roles/sa-lighttpd
+        url = https://github.com/softasap/sa-lighttpd.git
+[submodule "roles/sa-acme-sh"]
+        path = roles/sa-acme-sh
+        url = https://github.com/softasap/sa-acme-sh.git
+[submodule "roles/sa-php-fpm"]
+        path = roles/sa-php-fpm
+        url = https://github.com/softasap/sa-php-fpm.git
+[submodule "roles/sa-include"]
+        path = roles/sa-include
+        url = https://github.com/softasap/sa-include.git
+
+
