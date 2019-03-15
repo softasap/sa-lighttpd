@@ -3,5 +3,5 @@
 
   - include_tasks: sa-epel/main.yml
     when: ansible_distribution in [ "CentOS", "RedHat" ]
-    
+  
   - include_tasks: tasks_lighttpd.yml

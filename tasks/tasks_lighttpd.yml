@@ -52,7 +52,7 @@
           - 10-status.conf
           - 10-userdir.conf
           - 10-cgi.conf
-          - 10-fastcgi.conf  
+          - 10-fastcgi.conf
           - 10-proxy.conf
           - 10-simple-vhost.conf
           - 10-ssl.conf
@@ -65,15 +65,15 @@
     when: ansible_distribution in [ "CentOS", "RedHat" ]
 
   - name: Lighttpd | Patch default settings /etc/lighttpd/lighttpd.conf
-    lineinfile: dest=/etc/lighttpd/lighttpd.conf  regexp="{{item.regexp}}" line="{{item.line}}" insertafter="{{item.insertafter | default('EOF')}}"
+    lineinfile: dest=/etc/lighttpd/lighttpd.conf  regexp="{{ item.regexp }}" line="{{ item.line }}" insertafter="{{ item.insertafter | default('EOF') }}"
     with_items: "{{default_conf_properties | default([])}}"
     become: yes
     tags:
       - lighttpd
 
   - name: Lighttpd | Patch custom settings /etc/lighttpd/lighttpd.conf
-    lineinfile: dest=/etc/lighttpd/lighttpd.conf  regexp="{{item.regexp}}" line="{{item.line}}" insertafter="{{item.insertafter | default('EOF')}}"
-    with_items: "{{custom_conf_properties | default([])}}"
+    lineinfile: dest=/etc/lighttpd/lighttpd.conf  regexp="{{ item.regexp }}" line="{{ item.line }}" insertafter="{{ item.insertafter | default('EOF') }}"
+    with_items: "{{ custom_conf_properties | default([]) }}"
     become: yes
     tags:
       - lighttpd
@@ -81,5 +81,6 @@
   - name: Lighttpd | Restart service
     service: name="lighttpd" state="restarted" enabled="yes"
     become: yes
+    when: docker_test is not defined
     tags:
       - lighttpd
