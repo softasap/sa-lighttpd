@@ -1,0 +1,9 @@
+- src: softasap.sa-lighttpd
+  name: sa-lighttpd
+- src: softasap.sa-acme-sh
+  name: sa-acme-sh
+- src: softasap.sa-php-fpm
+  name: sa-php-fpm
+- src: softasap.sa-include
+  name: sa-include
+
