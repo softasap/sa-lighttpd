@@ -21,10 +21,21 @@ galaxy_info:
   # platform on this list, let us know and we'll get it added!
   #
   platforms:
+    - name: Ubuntu
+      versions:
+        - trusty
+        - xenial
+        - bionic
     - name: EL
       versions:
         - 6
         - 7
+    - name: Fedora
+      versions:
+        - 25
+        - 26
+        - 27
+        - 28
   galaxy_tags:
     - lighttpd
     - web
