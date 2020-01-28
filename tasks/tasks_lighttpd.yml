@@ -3,7 +3,16 @@
     package:
       name: libselinux-python
       state: present
-    when: ansible_distribution in [ "CentOS", "RedHat" ]
+    when: ansible_distribution in [ "CentOS", "RedHat" ] and ansible_python_version is version_compare('3','<')
+    become: yes
+    tags:
+      - lighttpd
+
+  - name: Lighttpd | dependencies
+    package:
+      name: python3-libselinux
+      state: present
+    when: ansible_distribution in [ "CentOS", "RedHat" ] and ansible_python_version is version_compare('3','>=')
     become: yes
     tags:
       - lighttpd
