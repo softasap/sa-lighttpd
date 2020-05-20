@@ -3,7 +3,16 @@
     package:
       name: libselinux-python
       state: present
-    when: ansible_distribution in [ "CentOS", "RedHat" ]      
+    when: ansible_distribution in [ "CentOS", "RedHat" ] and ansible_python_version is version_compare('3','<')
+    become: yes
+    tags:
+      - lighttpd
+
+  - name: Lighttpd | dependencies
+    package:
+      name: python3-libselinux
+      state: present
+    when: ansible_distribution in [ "CentOS", "RedHat" ] and ansible_python_version is version_compare('3','>=')
     become: yes
     tags:
       - lighttpd
@@ -65,14 +74,22 @@
     when: ansible_distribution in [ "CentOS", "RedHat" ]
 
   - name: Lighttpd | Patch default settings /etc/lighttpd/lighttpd.conf
-    lineinfile: dest=/etc/lighttpd/lighttpd.conf  regexp="{{ item.regexp }}" line="{{ item.line }}" insertafter="{{ item.insertafter | default('EOF') }}"
-    with_items: "{{default_conf_properties | default([])}}"
+    lineinfile:
+       dest: /etc/lighttpd/lighttpd.conf
+       regexp: "{{ item.regexp }}"
+       line: "{{ item.line }}"
+       insertafter: "{{ item.insertafter | default('EOF') }}"
+    with_items: "{{ default_conf_properties | default([]) }}"
     become: yes
     tags:
       - lighttpd
 
   - name: Lighttpd | Patch custom settings /etc/lighttpd/lighttpd.conf
-    lineinfile: dest=/etc/lighttpd/lighttpd.conf  regexp="{{ item.regexp }}" line="{{ item.line }}" insertafter="{{ item.insertafter | default('EOF') }}"
+    lineinfile:
+      dest: /etc/lighttpd/lighttpd.conf
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      insertafter: "{{ item.insertafter | default('EOF') }}"
     with_items: "{{ custom_conf_properties | default([]) }}"
     become: yes
     tags:
