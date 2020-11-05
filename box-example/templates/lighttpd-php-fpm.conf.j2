@@ -4,11 +4,11 @@
 
 #server.modules += ( "mod_fastcgi" )
 
-index-file.names += ( "index.php" ) 
+index-file.names += ( "index.php" )
 
 fastcgi.server = (
     ".php" => (
-      "localhost" => ( 
+      "localhost" => (
         "socket" => "/var/run/php/php7.2-fpm.sock",
         "broken-scriptfilename" => "enable"
       ))

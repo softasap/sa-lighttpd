@@ -26,7 +26,7 @@
       - lighttpd
 
   - name: Lighttpd | Ensure config dirs
-    file: path="{{ item }}" state="directory"
+    file: path="{{ item }}" state="directory" mode="0755"
     with_items:
       - /etc/lighttpd/conf-available
       - /etc/lighttpd/conf-enabled
@@ -51,7 +51,7 @@
 
   - block:
       - name: Lighttpd | template conf snippets
-        template: src="templates/conf-available/{{ item }}" dest="/etc/lighttpd/conf-available"
+        template: src="templates/conf-available/{{ item }}" dest="/etc/lighttpd/conf-available" mode="0644"
         with_items:
           - 05-auth.conf
           - 10-cml.conf

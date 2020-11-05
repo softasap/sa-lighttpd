@@ -2,6 +2,15 @@
 # defaults file for sa-lighttpd
 
 default_conf_properties:
-  - {regexp: "include_shell \"/usr/share/lighttpd/include-conf-enabled.pl\"", line: "#include_shell \"/usr/share/lighttpd/include-conf-enabled.pl\""}
-  - {regexp: "^[#]?include \"/etc/lighttpd/conf-enabled/*", line: "include \"/etc/lighttpd/conf-enabled/*.conf\""}
-  - {regexp: "^[#]?include \"/etc/lighttpd/sites-enabled/*", line: "include \"/etc/lighttpd/sites-enabled/*.conf\""}
+  - {
+      regexp: "include_shell \"/usr/share/lighttpd/include-conf-enabled.pl\"",
+      line: "#include_shell \"/usr/share/lighttpd/include-conf-enabled.pl\""
+    }
+  - {
+      regexp: "^[#]?include \"/etc/lighttpd/conf-enabled/*",
+      line: "include \"/etc/lighttpd/conf-enabled/*.conf\""
+    }
+  - {
+      regexp: "^[#]?include \"/etc/lighttpd/sites-enabled/*",
+      line: "include \"/etc/lighttpd/sites-enabled/*.conf\""
+    }

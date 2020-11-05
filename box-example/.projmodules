@@ -10,5 +10,3 @@
 [submodule "roles/sa-include"]
         path = roles/sa-include
         url = https://github.com/softasap/sa-include.git
-
-

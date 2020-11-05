@@ -38,7 +38,7 @@ Config approaches
 -----------------
 
 By default, config templated is done for compability with `sa-nginx` role approaches.
-This means: default global config file, adjusted by: loads snippets from 
+This means: default global config file, adjusted by: loads snippets from
 `conf-enabled` and `sites-enabled` ; You can have some easy to pick snippets in `conf-available` and `sites-available`
 folders.
 
@@ -55,7 +55,7 @@ include "/etc/lighttpd/sites-enabled/*.conf"
 
 But finally, it is up to you how you configure web server finally. You can have
 
-ascetic one   
+ascetic one
 
 ```conf
 server.modules = (
@@ -149,13 +149,13 @@ activate ssl
 ```conf
 
 ##################### enable this block to make SSL available _only_ #####################
-ssl.engine = "enable" 
+ssl.engine = "enable"
 ssl.pemfile = "/etc/lighttpd/server.pem"
 ##########################################
 ##################### enable this block to make SSL available next to http #####################
 #$SERVER["socket"] == ":443" {
-#     ssl.engine                  = "enable" 
-#     ssl.pemfile                 = "/etc/lighttpd/server.pem" 
+#     ssl.engine                  = "enable"
+#     ssl.pemfile                 = "/etc/lighttpd/server.pem"
 # }
 ##########################################
 
@@ -513,8 +513,8 @@ Scope that additionally processed on centos systems
 Folders under control
 
 ```
-/var/log/lighttpd 
-/var/run/lighttpd 
+/var/log/lighttpd
+/var/run/lighttpd
 /var/cache/lighttpd
 
 
@@ -572,4 +572,4 @@ Join gitter discussion channel at [Gitter](https://gitter.im/softasap)
 
 Discover other roles at  http://www.softasap.com/roles/registry_generated.html
 
-visit our blog at http://www.softasap.com/blog/archive.html 
+visit our blog at http://www.softasap.com/blog/archive.html
